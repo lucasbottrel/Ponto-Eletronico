@@ -1,0 +1,10 @@
+{
+  "name": "ponto-eletronico",
+  "version": "1.0.0",
+  "description": "Aplicação simples de Ponto Eletronico",
+  "author": "Lucas Bottrel Lopes de Moura",
+  "main": "main.js",
+  "private": true,
+  "dependencies": {
+  }
+}
