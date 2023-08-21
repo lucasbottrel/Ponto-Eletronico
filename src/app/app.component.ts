@@ -14,7 +14,7 @@ export class AppComponent {
   endTime = '';
   timesum = '';
   resultColor = '';
-
+  comment = '';
   constructor(private localStorageService: LocalStorageService) {}
 
   ngOnInit(): void {
@@ -24,19 +24,19 @@ export class AppComponent {
     let lunchTime = data.lunchTime ? new Date(data.lunchTime) : null;
     let lunchEndTime = data.lunchEndTime ? new Date(data.lunchEndTime) : null;
     let endTime = data.endTime ? new Date(data.endTime) : null;
+    let comment = data.comment ? data.comment : '';
 
     this.startTime = startTime ? `${startTime.getHours().toString().padStart(2, '0')}:${startTime.getMinutes().toString().padStart(2, '0')}` : '';
     this.lunchTime = lunchTime ? `${lunchTime.getHours().toString().padStart(2, '0')}:${lunchTime.getMinutes().toString().padStart(2, '0')}`: '';
     this.lunchEndTime = lunchEndTime ? `${lunchEndTime.getHours().toString().padStart(2, '0')}:${lunchEndTime.getMinutes().toString().padStart(2, '0')}` : '';
     this.endTime = endTime ? `${endTime.getHours().toString().padStart(2, '0')}:${endTime.getMinutes().toString().padStart(2, '0')}` : '';
     this.timesum = data.timesum ? data.timesum : '';
+    this.comment = comment ? comment : '';
 
     this.setResultColor(Number(this.timesum.split(':')[0]));
   }
 
   setResultColor(horas: number) {
-    console.log(horas)
-
     if (horas == 1) {
       this.resultColor = '#a72828';
     } else if (horas >= 2 && horas < 4) {
@@ -104,15 +104,38 @@ export class AppComponent {
         .toString()
         .padStart(2, '0')}`;
       this.setResultColor(horasTotais);
-
-      this.localStorageService.saveData(chegada, saidaAlmoco, voltaAlmoco, horarioFinal, this.timesum)
-
-    } else {
-      this.startTime = '';
-      this.lunchTime = '';
-      this.lunchEndTime = '';
-      this.endTime = '';
     }
+
+    if (chegada && saidaAlmoco && !voltaAlmoco && !horarioFinal){
+      const milissegundosAteAlmoco = saidaAlmoco.getTime() - chegada.getTime();
+
+      const horasTotais = Math.floor(milissegundosAteAlmoco / 3600000); // 1 hora = 3600000 milissegundos
+      const minutosTotais = Math.floor((milissegundosAteAlmoco % 3600000) / 60000); // 1 minuto = 60000 milissegundos
+
+      this.timesum = `${horasTotais.toString().padStart(2, '0')}:${minutosTotais
+        .toString()
+        .padStart(2, '0')}`;
+      this.setResultColor(horasTotais);
+    }
+
+    if (!chegada && !saidaAlmoco && voltaAlmoco && horarioFinal){
+      const milissegundosAposAlmoco =
+        horarioFinal.getTime() - voltaAlmoco.getTime();
+
+      const horasTotais = Math.floor(milissegundosAposAlmoco / 3600000); // 1 hora = 3600000 milissegundos
+      const minutosTotais = Math.floor((milissegundosAposAlmoco % 3600000) / 60000); // 1 minuto = 60000 milissegundos
+
+      this.timesum = `${horasTotais.toString().padStart(2, '0')}:${minutosTotais
+        .toString()
+        .padStart(2, '0')}`;
+      this.setResultColor(horasTotais);
+    }
+
+    this.localStorageService.saveData(chegada, saidaAlmoco, voltaAlmoco, horarioFinal, this.timesum)
+  }
+
+  saveComment(){
+    this.localStorageService.saveComment(this.comment);
   }
 
   updateData(){

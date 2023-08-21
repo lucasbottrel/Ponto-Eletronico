@@ -39,7 +39,7 @@
     <br>
     <div class="comment-box">
       <p>COMENTÁRIOS</p>
-      <textarea class="comment" name="comment" id="comment"></textarea>
+      <textarea (ngModelChange)="saveComment()" [(ngModel)]="comment" class="comment" name="comment" id="comment"></textarea>
     </div>
   </div>
 </div>

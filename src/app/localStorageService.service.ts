@@ -12,8 +12,13 @@ export class LocalStorageService {
   private lunchEndTimeKey = 'lunchEndTime';
   private endTimeKey = 'endTime';
   private timesumKey = 'timesum';
+  private commentKey = 'comment';
 
-  saveData(startTime: Date, lunchTime: Date, lunchEndTime: Date, endTime: Date, timesumKey: string): void {
+  saveComment(comment: string): void {
+    localStorage.setItem(this.commentKey, JSON.stringify(comment));
+  }
+
+  saveData(startTime: Date | null, lunchTime: Date | null, lunchEndTime: Date | null, endTime: Date | null, timesumKey: string): void {
     localStorage.setItem(this.startTimeKey, JSON.stringify(startTime));
     localStorage.setItem(this.lunchTimeKey, JSON.stringify(lunchTime));
     localStorage.setItem(this.lunchEndTimeKey, JSON.stringify(lunchEndTime));
@@ -27,8 +32,9 @@ export class LocalStorageService {
     const lunchEndTime = localStorage.getItem(this.lunchEndTimeKey);
     const endTime = localStorage.getItem(this.endTimeKey);
     const timesum = localStorage.getItem(this.timesumKey);
+    const comment = localStorage.getItem(this.commentKey);
 
-    return JSON.parse('{ "startTime": ' + startTime + ', "lunchTime": ' + lunchTime + ', "lunchEndTime": ' + lunchEndTime + ', "endTime": ' + endTime + ', "timesum": ' + timesum + ' }');
+    return JSON.parse('{ "startTime": ' + startTime + ', "lunchTime": ' + lunchTime + ', "lunchEndTime": ' + lunchEndTime + ', "endTime": ' + endTime + ', "timesum": ' + timesum + ', "comment": ' + comment + ' }');
   }
 
   clearData(): void {
