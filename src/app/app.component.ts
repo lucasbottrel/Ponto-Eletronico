@@ -54,6 +54,8 @@ export class AppComponent {
 
   calculateHours() {
     // Calcula a duração total do expediente em milissegundos (8 horas)
+
+    // this.saveComment()
     const duracaoTotal = 8 * 60 * 60 * 1000; // 8 horas = 8 * 60 minutos * 60 segundos * 1000 milissegundos
 
     let chegada = this.startTime
@@ -134,7 +136,9 @@ export class AppComponent {
     this.localStorageService.saveData(chegada, saidaAlmoco, voltaAlmoco, horarioFinal, this.timesum)
   }
 
-  saveComment(){
+  saveComment(event: any){
+    this.comment = event.target.value
+    console.log(this.comment)
     this.localStorageService.saveComment(this.comment);
   }
 
