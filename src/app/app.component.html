@@ -37,6 +37,7 @@
       </button>
     </div>
     <br>
+    <p>SALDO: {{ minutosParaHorario(saldoDiario) }}</p>
     <div class="comment-box">
       <p>COMENTÁRIOS</p>
       <textarea (input)="saveComment($event)" [(ngModel)]="comment" class="comment" name="comment" id="comment"></textarea>
