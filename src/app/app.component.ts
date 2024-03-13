@@ -143,7 +143,7 @@ export class AppComponent implements OnInit {
   }
 
   setResultColor(horas: number) {
-    if (horas == 1) {
+    if (horas <= 1) {
       this.resultColor = '#a72828';
     } else if (horas >= 2 && horas < 4) {
       this.resultColor = '#a75528';

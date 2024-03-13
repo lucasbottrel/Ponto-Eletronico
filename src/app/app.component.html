@@ -26,28 +26,28 @@
         <div class="clock-label"><p>HORÁRIO SAÍDA</p></div>
         <input
           [(ngModel)]="startTime"
-          (change)="updateData()"
+          (blur)="updateData()"
           type="time"
           name=""
           id=""
         />
         <input
           [(ngModel)]="lunchTime"
-          (change)="updateData()"
+          (blur)="updateData()"
           type="time"
           name=""
           id=""
         />
         <input
           [(ngModel)]="lunchEndTime"
-          (change)="updateData()"
+          (blur)="updateData()"
           type="time"
           name=""
           id=""
         />
         <input
           [(ngModel)]="endTime"
-          (change)="updateData()"
+          (blur)="updateData()"
           type="time"
           name=""
           id=""
