@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { IndexDBService } from './indexDBservice.service';
 import { ElectronicPoint } from './models/electronicPoint.model';
-import * as Utils from './models/utils/utils';
+import { MatDrawer } from '@angular/material/sidenav';
+import * as Utils from './utils/utils';
 
 @Component({
   selector: 'app-root',
@@ -18,21 +19,26 @@ export class AppComponent implements OnInit {
   resultColor = '';
   comment = '';
   actualDay = '';
-  saldoDiario = 0;
+  showFiller = false;
+  isSideNavOpened = false;
+  journeySizeInMinutes = 8 * 60;
   myDataList: ElectronicPoint[] = [];
+
+  @ViewChild('drawer', { static: true }) drawer: MatDrawer | undefined;
 
   constructor(private IndexDBService: IndexDBService) {}
 
-  ngOnInit(): void {
-    this.refreshData();
+  async ngOnInit() {
+    await this.refreshData();
   }
 
-  refreshData() {
-    void this.IndexDBService.getAllData().then(data => {
+  async refreshData() {
+    await this.IndexDBService.getAllData().then((data) => {
       this.myDataList = data;
-      console.log(this.myDataList);
 
-      const dayData = this.myDataList.find(obj => obj.data === Utils.formatDate(new Date()));
+      const dayData = this.myDataList.find(
+        (obj) => obj.data === Utils.formatDate(new Date())
+      );
 
       if (dayData) {
         this.startTime = dayData.horaInicio;
@@ -44,95 +50,94 @@ export class AppComponent implements OnInit {
         this.calculateTimeSum();
       }
 
+      console.log(this.myDataList);
     });
   }
   calculateTimeSum() {
-    const duracaoTotal = 8 * 60 * 60 * 1000; // 8 horas = 8 * 60 minutos * 60 segundos * 1000 milissegundos
+    const duracaoTotalEmMinutos = this.journeySizeInMinutes;
 
-    const chegada = Utils.createDateTimeWithFormat(this.startTime, this.actualDay)
-    const saidaAlmoco = Utils.createDateTimeWithFormat(this.lunchTime, this.actualDay)
-    const voltaAlmoco = Utils.createDateTimeWithFormat(this.lunchEndTime, this.actualDay)
-    let horarioFinal = Utils.createDateTimeWithFormat(this.endTime, this.actualDay)
-    let horasTotais = 0;
-    let minutosTotais = 0;
+    const chegadaEmMinutos =
+      this.startTime != '' ? Utils.horarioParaMinutos(this.startTime) : null;
+    const saidaAlmocoEmMinutos =
+      this.lunchTime != '' ? Utils.horarioParaMinutos(this.lunchTime) : null;
+    const voltaAlmocoEmMinutos =
+      this.lunchEndTime != ''
+        ? Utils.horarioParaMinutos(this.lunchEndTime)
+        : null;
+    let horarioFinalEmMinutos =
+      this.endTime != '' ? Utils.horarioParaMinutos(this.endTime) : null;
 
-    if (chegada && saidaAlmoco && voltaAlmoco && !horarioFinal) {
-      const duracaoAlmoco = voltaAlmoco.getTime() - saidaAlmoco.getTime();
-      const tempoTotalTrabalho = duracaoTotal + duracaoAlmoco;
+    if (
+      chegadaEmMinutos &&
+      saidaAlmocoEmMinutos &&
+      voltaAlmocoEmMinutos &&
+      !horarioFinalEmMinutos
+    ) {
+      const duracaoAteAlmoco = saidaAlmocoEmMinutos - chegadaEmMinutos;
+      const tempoRestante = duracaoTotalEmMinutos - duracaoAteAlmoco;
 
-      const horarioFinalEmMilissegundos =
-        chegada.getTime() + tempoTotalTrabalho;
-      const horarioFinal = new Date(horarioFinalEmMilissegundos);
-
-      this.endTime = `${horarioFinal
-        .getHours()
-        .toString()
-        .padStart(2, '0')}:${horarioFinal
-        .getMinutes()
-        .toString()
-        .padStart(2, '0')}`;
+      const horarioFinalEmMinutos = voltaAlmocoEmMinutos + tempoRestante;
+      this.endTime = Utils.minutosParaHorario(horarioFinalEmMinutos);
     }
 
-    horarioFinal = Utils.createDateTimeWithFormat(this.endTime, this.actualDay)
+    horarioFinalEmMinutos = Utils.horarioParaMinutos(this.endTime);
 
-    if (chegada && saidaAlmoco && voltaAlmoco && horarioFinal) {
-      const milissegundosAteAlmoco = saidaAlmoco.getTime() - chegada.getTime();
-      const milissegundosAposAlmoco =
-        horarioFinal.getTime() - voltaAlmoco.getTime();
+    if (
+      chegadaEmMinutos &&
+      saidaAlmocoEmMinutos &&
+      voltaAlmocoEmMinutos &&
+      horarioFinalEmMinutos
+    ) {
+      const duracaoAteAlmoco = saidaAlmocoEmMinutos - chegadaEmMinutos;
+      const duracaoAposAlmoco = horarioFinalEmMinutos - voltaAlmocoEmMinutos;
 
-      const milissegundosTotais =
-        milissegundosAteAlmoco + milissegundosAposAlmoco;
-      horasTotais = Math.floor(milissegundosTotais / 3600000); // 1 hora = 3600000 milissegundos
-      minutosTotais = Math.floor((milissegundosTotais % 3600000) / 60000); // 1 minuto = 60000 milissegundos
+      const duracaoTotalEmMinutos = duracaoAteAlmoco + duracaoAposAlmoco;
 
-      this.timesum = `${horasTotais.toString().padStart(2, '0')}:${minutosTotais
-        .toString()
-        .padStart(2, '0')}`;
+      this.timesum = Utils.minutosParaHorario(duracaoTotalEmMinutos);
     }
 
-    if (chegada && saidaAlmoco && !voltaAlmoco && !horarioFinal){
-      const milissegundosAteAlmoco = saidaAlmoco.getTime() - chegada.getTime();
+    if (
+      chegadaEmMinutos &&
+      saidaAlmocoEmMinutos &&
+      !voltaAlmocoEmMinutos &&
+      !horarioFinalEmMinutos
+    ) {
+      const duracaoAteAlmoco = saidaAlmocoEmMinutos - chegadaEmMinutos;
 
-      horasTotais  = Math.floor(milissegundosAteAlmoco / 3600000); // 1 hora = 3600000 milissegundos
-      minutosTotais = Math.floor((milissegundosAteAlmoco % 3600000) / 60000); // 1 minuto = 60000 milissegundos
-
-      this.timesum = `${horasTotais.toString().padStart(2, '0')}:${minutosTotais
-        .toString()
-        .padStart(2, '0')}`;
+      this.timesum = Utils.minutosParaHorario(duracaoAteAlmoco);
     }
 
-    if (!chegada && !saidaAlmoco && voltaAlmoco && horarioFinal){
-      const milissegundosAposAlmoco =
-        horarioFinal.getTime() - voltaAlmoco.getTime();
+    if (
+      !chegadaEmMinutos &&
+      !saidaAlmocoEmMinutos &&
+      voltaAlmocoEmMinutos &&
+      horarioFinalEmMinutos
+    ) {
+      const duracaoAposAlmoco = horarioFinalEmMinutos - voltaAlmocoEmMinutos;
 
-      horasTotais = Math.floor(milissegundosAposAlmoco / 3600000); // 1 hora = 3600000 milissegundos
-      minutosTotais = Math.floor((milissegundosAposAlmoco % 3600000) / 60000); // 1 minuto = 60000 milissegundos
-
-      this.timesum = `${horasTotais.toString().padStart(2, '0')}:${minutosTotais
-        .toString()
-        .padStart(2, '0')}`;
+      this.timesum = Utils.minutosParaHorario(duracaoAposAlmoco);
     }
 
-    if (chegada && !saidaAlmoco && !voltaAlmoco && horarioFinal){
-      const milissegundosTotal =
-        horarioFinal.getTime() - chegada.getTime();
+    if (
+      chegadaEmMinutos &&
+      !saidaAlmocoEmMinutos &&
+      !voltaAlmocoEmMinutos &&
+      horarioFinalEmMinutos
+    ) {
+      const duracaoTotalEmMinutos = horarioFinalEmMinutos - chegadaEmMinutos;
 
-      horasTotais = Math.floor(milissegundosTotal / 3600000); // 1 hora = 3600000 milissegundos
-      minutosTotais = Math.floor((milissegundosTotal % 3600000) / 60000); // 1 minuto = 60000 milissegundos
-
-      this.timesum = `${horasTotais.toString().padStart(2, '0')}:${minutosTotais
-        .toString()
-        .padStart(2, '0')}`;
+      this.timesum = Utils.minutosParaHorario(duracaoTotalEmMinutos);
     }
 
-    this.saldoDiario = (horasTotais * 60 + minutosTotais) - 8 * 60;
-    this.setResultColor(horasTotais);
+    if (this.timesum) {
+      this.setResultColor(Number.parseInt(this.timesum.split(':')[0]));
+    }
   }
 
   deleteData(id: number | undefined) {
     if (id) {
       void this.IndexDBService.deleteData(id).then(() => {
-        this.refreshData();
+        void this.refreshData();
       });
     }
   }
@@ -153,19 +158,15 @@ export class AppComponent implements OnInit {
     } else if (horas > 10) this.resultColor = '#2881a7';
   }
 
-
-  async calculateHours() {
+  async saveComment(event: any) {
+    this.comment = event.target.value;
     await this.updateData();
   }
 
-  async saveComment(event: any){
-    this.comment = event.target.value
-    await this.updateData();
-  }
-
-  async updateData(){
-
+  async updateData() {
     const id = await this.IndexDBService.getByDate(Utils.formatDate(new Date()));
+
+    this.calculateTimeSum();
 
     const newData: ElectronicPoint = {
       data: Utils.formatDate(new Date()),
@@ -174,20 +175,16 @@ export class AppComponent implements OnInit {
       horaRetornoAlmoco: this.lunchEndTime,
       horaFinal: this.endTime,
       comentarios: this.comment,
-      saldo: this.saldoDiario
-    }
+      saldo: this.timesum !== "" ? Utils.horarioParaMinutos(this.timesum) - this.journeySizeInMinutes : 0,
+    };
 
     if (id) {
-      await this.IndexDBService.updateData(id, newData).then(() => {
-        this.refreshData();
-      });
-
+      await this.IndexDBService.updateData(id, newData);
     } else {
-      await this.IndexDBService.addData(newData).then(() => {
-        this.refreshData();
-      });
+      await this.IndexDBService.addData(newData);
     }
 
+    await this.refreshData();
   }
 
   clean() {
@@ -198,16 +195,20 @@ export class AppComponent implements OnInit {
     this.timesum = '';
     this.resultColor = '';
 
-    void this.updateData();
+    void this.IndexDBService.getByDate(Utils.formatDate(new Date())).then(
+      (id) => {
+        if (id != null && id != undefined) {
+          void this.IndexDBService.deleteData(id);
+          void this.refreshData();
+        }
+      }
+    );
   }
 
-  minutosParaHorario(totalMinutos: number): string {
-    const horas = Math.floor(totalMinutos / 60);
-    const minutos = totalMinutos % 60;
-
-    const horasStr = horas.toString().padStart(2, '0');
-    const minutosStr = minutos.toString().padStart(2, '0');
-
-    return `${horasStr}:${minutosStr}`;
+  toggleDrawer() {
+    if (this.drawer) {
+      void this.drawer.toggle();
+      this.isSideNavOpened = !this.isSideNavOpened;
+    }
   }
 }

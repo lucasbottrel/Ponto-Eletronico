@@ -29,7 +29,7 @@ export class IndexDBService extends Dexie {
     return this.ElectronicPointData.update(id, newData);
   }
 
-  deleteData(id: number) {
+  async deleteData(id: number) {
     return this.ElectronicPointData.delete(id);
   }
 

@@ -1,50 +1,115 @@
-<div class="viewport">
-  <div class="title-box">
-    <div class="title">
-      <mat-icon [inline]="true">access_time</mat-icon>
-      <p>Calculadora de Folha de Ponto</p>
+<button
+  class="drawer-button"
+  type="button"
+  mat-fab
+  (click)="toggleDrawer()"
+  [class.opaque]="isSideNavOpened"
+>
+  <mat-icon>menu</mat-icon>
+</button>
+
+<mat-drawer-container class="viewport" [hasBackdrop]="true">
+  <div class="cont">
+    <div class="title-box">
+      <div class="title">
+        <mat-icon [inline]="true">access_time</mat-icon>
+        <p>Calculadora de Folha de Ponto</p>
+      </div>
+      <hr />
+      <p>Faça a soma de horas e minutos de sua folha de Ponto</p>
     </div>
-    <hr>
-    <p>
-      Faça a soma de horas e minutos de sua folha de Ponto
-    </p>
-  </div>
-  <div class="clock">
-    <div class="clock-timers">
-      <div class="clock-label"><p>HORÁRIO CHEGADA</p></div>
-      <div class="clock-label"><p>HORÁRIO ALMOÇO</p></div>
-      <div class="clock-label"><p>HORÁRIO RETORNO</p></div>
-      <div class="clock-label"><p>HORÁRIO SAÍDA</p></div>
-      <input [(ngModel)]="startTime" (change)="updateData()" type="time" name="" id="">
-      <input [(ngModel)]="lunchTime" (change)="updateData()" type="time" name="" id="">
-      <input [(ngModel)]="lunchEndTime" (change)="updateData()" type="time" name="" id="">
-      <input [(ngModel)]="endTime" (change)="updateData()" type="time" name="" id="">
+    <div class="clock">
+      <div class="clock-timers">
+        <div class="clock-label"><p>HORÁRIO CHEGADA</p></div>
+        <div class="clock-label"><p>HORÁRIO ALMOÇO</p></div>
+        <div class="clock-label"><p>HORÁRIO RETORNO</p></div>
+        <div class="clock-label"><p>HORÁRIO SAÍDA</p></div>
+        <input
+          [(ngModel)]="startTime"
+          (change)="updateData()"
+          type="time"
+          name=""
+          id=""
+        />
+        <input
+          [(ngModel)]="lunchTime"
+          (change)="updateData()"
+          type="time"
+          name=""
+          id=""
+        />
+        <input
+          [(ngModel)]="lunchEndTime"
+          (change)="updateData()"
+          type="time"
+          name=""
+          id=""
+        />
+        <input
+          [(ngModel)]="endTime"
+          (change)="updateData()"
+          type="time"
+          name=""
+          id=""
+        />
+      </div>
+      <br />
+      <div class="time-sum">
+        <p></p>
+        <input
+          [ngStyle]="{
+            color: resultColor !== '' ? 'white' : '#495057',
+            background: resultColor
+          }"
+          disabled="true"
+          class="time-sum-input"
+          [(ngModel)]="timesum"
+          type="time"
+          name=""
+          id=""
+        />
+      </div>
+      <br />
+      <div class="buttons">
+        <button (click)="updateData()" class="calculate">
+          <mat-icon>access_time</mat-icon>
+          <p>Calcular</p>
+        </button>
+        <button (click)="clean()" class="clean">
+          <mat-icon>backspace</mat-icon>
+          <p>Apagar</p>
+        </button>
+      </div>
+      <br />
     </div>
-    <br>
-    <div class="time-sum">
-      <p></p>
-      <input [ngStyle]="{ 'color': resultColor !== '' ? 'white' : '#495057', 'background': resultColor}" disabled="true" class="time-sum-input" [(ngModel)]="timesum" type="time" name="" id="">
-    </div>
-    <br>
-    <div class="buttons">
-      <button (click)="calculateHours()" class="calculate">
-        <mat-icon >access_time</mat-icon>
-        <p>Calcular</p>
-      </button>
-      <button (click)="clean()" class="clean">
-        <mat-icon >backspace</mat-icon>
-        <p>Apagar</p>
-      </button>
-    </div>
-    <br>
-    <p>SALDO: {{ minutosParaHorario(saldoDiario) }}</p>
     <div class="comment-box">
       <p>COMENTÁRIOS</p>
-      <textarea (input)="saveComment($event)" [(ngModel)]="comment" class="comment" name="comment" id="comment"></textarea>
+      <textarea
+        (input)="saveComment($event)"
+        [(ngModel)]="comment"
+        class="comment"
+        name="comment"
+        id="comment"
+      ></textarea>
     </div>
   </div>
-</div>
+</mat-drawer-container>
 
-
-
-
+<mat-drawer #drawer class="sidenav" mode="side">
+  <div class="sidenav-content">
+    <h1>Histórico</h1>
+    <div class="day">
+      <p>23/01/2024</p>
+      <div class="balance">+10</div>
+      <div class="historic-buttons">
+        <button mat-icon-button type="button" class="edit-icon-button">
+          <mat-icon class="edit-icon">edit</mat-icon>
+        </button>
+        <button mat-icon-button type="button" class="delete-icon-button">
+          <mat-icon class="delete-icon">delete</mat-icon>
+        </button>
+      </div>
+    </div>
+    <hr />
+  </div>
+</mat-drawer>

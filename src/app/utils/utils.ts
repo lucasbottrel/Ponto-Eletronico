@@ -65,3 +65,38 @@ export function subtrairHoras(hora1: string, hora2: string) {
 
   return `${horasFormatadas}:${minutosFormatados}`;
 }
+
+export function horarioParaMinutos(horario: string): number {
+  const [horas, minutos] = horario.split(':').map(Number);
+  return horas * 60 + minutos;
+}
+
+export function minutosParaHorario(minutos: number): string {
+  const horas = Math.floor(minutos / 60);
+  const minutosRestantes = minutos % 60;
+
+  const horasFormatadas = horas < 10 ? `0${horas}` : `${horas}`;
+  const minutosFormatados = minutosRestantes < 10 ? `0${minutosRestantes}` : `${minutosRestantes}`;
+
+  return `${horasFormatadas}:${minutosFormatados}`;
+}
+
+export function converterHorarioParaDecimal(horario: string): number {
+  const [horas, minutos] = horario.split(':').map(Number);
+
+  // Calcula o equivalente em decimal
+  const horarioDecimal = horas + minutos / 60;
+
+  return horarioDecimal;
+}
+
+export function converterDecimalParaHorario(decimal: number): string {
+  const horas = Math.floor(decimal);
+  const minutos = Math.round((decimal % 1) * 60);
+
+  // Formata os valores para o formato hh:mm
+  const horasFormatadas = horas < 10 ? `0${horas}` : `${horas}`;
+  const minutosFormatados = minutos < 10 ? `0${minutos}` : `${minutos}`;
+
+  return `${horasFormatadas}:${minutosFormatados}`;
+}
