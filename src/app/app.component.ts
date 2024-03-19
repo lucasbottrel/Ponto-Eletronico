@@ -130,7 +130,7 @@ export class AppComponent implements OnInit {
     }
 
     if (this.timesum) {
-      this.setResultColor(Number.parseInt(this.timesum.split(':')[0]));
+      this.resultColor =  Utils.getResultColor(Number.parseInt(this.timesum.split(':')[0]));
     }
   }
 
@@ -140,22 +140,6 @@ export class AppComponent implements OnInit {
         void this.refreshData();
       });
     }
-  }
-
-  setResultColor(horas: number) {
-    if (horas <= 1) {
-      this.resultColor = '#a72828';
-    } else if (horas >= 2 && horas < 4) {
-      this.resultColor = '#a75528';
-    } else if (horas >= 4 && horas < 6) {
-      this.resultColor = '#a7a528';
-    } else if (horas >= 6 && horas < 8) {
-      this.resultColor = '#63a728';
-    } else if (horas == 8) {
-      this.resultColor = '#28A745';
-    } else if (horas > 8 && horas < 10) {
-      this.resultColor = '#28a774';
-    } else if (horas > 10) this.resultColor = '#2881a7';
   }
 
   async saveComment(event: any) {
@@ -210,5 +194,16 @@ export class AppComponent implements OnInit {
       void this.drawer.toggle();
       this.isSideNavOpened = !this.isSideNavOpened;
     }
+  }
+
+  minutosParaHoras(minutos: number) {
+    minutos = Math.abs(minutos);
+    const horas = Math.floor(minutos / 60);
+    const minutosRestantes = minutos % 60;
+
+    if (minutosRestantes > 0) return horas.toString() + ":" + (minutosRestantes < 10 ? "0" : "") + minutosRestantes.toString();
+    else return horas.toString()
+
+
   }
 }

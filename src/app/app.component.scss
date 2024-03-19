@@ -28,43 +28,59 @@ body {
     align-items: center;
     justify-content: space-around;
     width: 100%;
+    line-height: 2.5;
 
-    p {
-      margin: 0;
+    .balance {
+      width: 20%;
+      display: flex;
+      height: 3vh;
+      border-radius: 5px;
+      align-items: center;
+      justify-content: center;
+
+      .icon{
+        scale: 0.7;
+        width: 40%;
+      }
+    }
+
+    .zeroBalance{
+      background: #c6c6c6;
+      color: #737373;
+    }
+
+    .positiveBalance{
+      background: #5c9d6a;
+      color: #ffffff;
+
+      p {
+        width: 50%;
+        text-align: center;
+      }
+    }
+
+    .negativeBalance{
+      background: #9d5c5c;
+      color: #ffffff;
+
+      p {
+        width: 50%;
+      }
     }
   }
 
-  .delete-icon-button {
-    border-radius: 50%;
-    transition: background-color 0.3s ease; /* Adiciona uma transição suave à cor de fundo */
+  .day:hover{
+    background-color: #e8e8e8;
+    cursor: pointer;
   }
 
-  .delete-icon-button:hover{
-    background-color: #ffe4e4
+  .cinza {
+    background-color: #f3f3f3; /* Cor cinza */
   }
 
-  .delete-icon {
-    color: #880101;
+  .branco {
+    background-color: #ffffff; /* Cor branca */
   }
-
-  .edit-icon-button {
-    border-radius: 50%;
-    transition: background-color 0.3s ease; /* Adiciona uma transição suave à cor de fundo */
-  }
-
-  .edit-icon-button:hover{
-    background-color: #e4edff;
-  }
-
-  .edit-icon {
-    color: #007bff;
-  }
-
-  .historic-buttons{
-    display: flex;
-    gap: 10%;
-  }
-
 }
 
 .viewport {
@@ -258,3 +274,5 @@ input:focus {
   outline: 0;
   box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
+
+

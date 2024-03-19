@@ -100,3 +100,28 @@ export function converterDecimalParaHorario(decimal: number): string {
 
   return `${horasFormatadas}:${minutosFormatados}`;
 }
+
+export function getResultColor(horas: number) : string {
+  if (horas <= 1) {
+    return '#a72828';
+  } else if (horas >= 2 && horas < 4) {
+    return '#a75528';
+  } else if (horas >= 4 && horas < 6) {
+    return '#a7a528';
+  } else if (horas >= 6 && horas < 8) {
+    return '#63a728';
+  } else if (horas == 8) {
+    return '#28A745';
+  } else if (horas > 8 && horas < 10) {
+    return '#28a774';
+  } else return '#2881a7';
+}
+
+export function minutosParaHoras(minutos: number) {
+  // Divide os minutos por 60 para obter o número de horas
+  const horas = Math.floor(minutos / 60);
+  // Calcula os minutos restantes após a conversão para horas
+  const minutosRestantes = minutos % 60;
+  // Formata a saída para exibir horas e minutos
+  return horas.toString() + "h " + minutosRestantes.toString() + "min";
+}

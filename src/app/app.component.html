@@ -98,16 +98,24 @@
 <mat-drawer #drawer class="sidenav" mode="side">
   <div class="sidenav-content">
     <h1>Histórico</h1>
-    <div class="day">
-      <p>23/01/2024</p>
-      <div class="balance">+10</div>
-      <div class="historic-buttons">
-        <button mat-icon-button type="button" class="edit-icon-button">
-          <mat-icon class="edit-icon">edit</mat-icon>
-        </button>
-        <button mat-icon-button type="button" class="delete-icon-button">
-          <mat-icon class="delete-icon">delete</mat-icon>
-        </button>
+    <div
+      *ngFor="let data of myDataList; let i = index"
+      class="day"
+      [ngClass]="{ cinza: i % 2 === 0, branco: i % 2 !== 0 }"
+    >
+      <p>{{ data.data }}</p>
+      <div
+        class="balance"
+        [ngClass]="{ zeroBalance: data.saldo === 0, positiveBalance: data.saldo > 0, negativeBalance: data.saldo < 0 }"
+        *ngIf="
+          data.saldo !== null && data.saldo !== '' && data.saldo !== undefined
+        "
+      >
+        <ng-container>
+          <mat-icon class="icon" *ngIf="data.saldo > 0">keyboard_arrow_up</mat-icon>
+          <mat-icon class="icon" *ngIf="data.saldo < 0">keyboard_arrow_down</mat-icon>
+        </ng-container>
+        <p>{{ minutosParaHoras(data.saldo) }}</p>
       </div>
     </div>
     <hr />
