@@ -25,6 +25,7 @@ export class AppComponent implements OnInit {
   myDataList: ElectronicPoint[] = [];
 
   @ViewChild('drawer', { static: true }) drawer: MatDrawer | undefined;
+  totalBalance = 0;
 
   constructor(private IndexDBService: IndexDBService) {}
 
@@ -49,6 +50,8 @@ export class AppComponent implements OnInit {
         this.actualDay = dayData.data;
         this.calculateTimeSum();
       }
+
+      this.calculateTotalBalance();
 
       console.log(this.myDataList);
     });
@@ -194,6 +197,13 @@ export class AppComponent implements OnInit {
       void this.drawer.toggle();
       this.isSideNavOpened = !this.isSideNavOpened;
     }
+  }
+  calculateTotalBalance() {
+    this.totalBalance = 0;
+
+    this.myDataList.forEach(obj => {
+      if (obj.saldo) this.totalBalance += obj.saldo;
+    })
   }
 
   minutosParaHoras(minutos: number) {

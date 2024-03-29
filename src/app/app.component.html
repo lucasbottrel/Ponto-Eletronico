@@ -97,27 +97,35 @@
 
 <mat-drawer #drawer class="sidenav" mode="side">
   <div class="sidenav-content">
-    <h1>Histórico</h1>
-    <div
-      *ngFor="let data of myDataList; let i = index"
-      class="day"
-      [ngClass]="{ cinza: i % 2 === 0, branco: i % 2 !== 0 }"
-    >
-      <p>{{ data.data }}</p>
+    <div class="history">
+      <h1>Histórico</h1>
       <div
-        class="balance"
-        [ngClass]="{ zeroBalance: data.saldo === 0, positiveBalance: data.saldo > 0, negativeBalance: data.saldo < 0 }"
-        *ngIf="
-          data.saldo !== null && data.saldo !== '' && data.saldo !== undefined
-        "
+        *ngFor="let data of myDataList; let i = index"
+        class="day"
+        [ngClass]="{ cinza: i % 2 === 0, branco: i % 2 !== 0 }"
       >
-        <ng-container>
-          <mat-icon class="icon" *ngIf="data.saldo > 0">keyboard_arrow_up</mat-icon>
-          <mat-icon class="icon" *ngIf="data.saldo < 0">keyboard_arrow_down</mat-icon>
-        </ng-container>
-        <p>{{ minutosParaHoras(data.saldo) }}</p>
+        <p>{{ data.data }}</p>
+        <div
+          class="balance"
+          [ngClass]="{ zeroBalance: data.saldo === 0, positiveBalance: data.saldo > 0, negativeBalance: data.saldo < 0 }"
+          *ngIf="
+            data.saldo !== null && data.saldo !== '' && data.saldo !== undefined
+          "
+        >
+          <ng-container>
+            <mat-icon class="icon" *ngIf="data.saldo > 0">keyboard_arrow_up</mat-icon>
+            <mat-icon class="icon" *ngIf="data.saldo < 0">keyboard_arrow_down</mat-icon>
+          </ng-container>
+          <p>{{ minutosParaHoras(data.saldo) }}</p>
+        </div>
       </div>
     </div>
-    <hr />
+    <div class="balanceSum">
+      <p>SALDO</p>
+      <ng-container>
+        <mat-icon class="icon">keyboard_arrow_up</mat-icon>
+      </ng-container>
+      <p>{{ minutosParaHoras(totalBalance) }}</p>
+    </div>
   </div>
 </mat-drawer>
