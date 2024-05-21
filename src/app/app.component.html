@@ -109,7 +109,7 @@
           class="balance"
           [ngClass]="{ zeroBalance: data.saldo === 0, positiveBalance: data.saldo > 0, negativeBalance: data.saldo < 0 }"
           *ngIf="
-            data.saldo !== null && data.saldo !== '' && data.saldo !== undefined
+            data.saldo !== null && data.saldo !== undefined
           "
         >
           <ng-container>

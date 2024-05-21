@@ -2,7 +2,7 @@
   "asar": true,
   "directories": {
     "output": "release/",
-    "buildResources": "/build"
+    "buildResources": "/dist"
   },
   "files": [
     "**/*",
@@ -16,7 +16,7 @@
     }
   ],
   "win": {
-    "icon": "dist/assets/icons",
+    "icon": "dist/assets/icons/favicon.png",
     "target": [
       "msi"
     ]

@@ -18,7 +18,7 @@ function createWindow(): BrowserWindow {
     height: 600,
     roundedCorners: true,
     autoHideMenuBar: true,
-    icon: "../dist/assets/icons/favicon.ico",
+    icon: '../src/assets/icons/favicon.png',
     webPreferences: {
       nodeIntegration: true,
       allowRunningInsecureContent: (serve),
