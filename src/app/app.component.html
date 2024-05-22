@@ -120,12 +120,13 @@
         </div>
       </div>
     </div>
-    <div class="balanceSum">
+    <div class="balanceSum" [ngClass]="{ positive: totalBalance > 0, negative: totalBalance < 0 }">
       <p>SALDO</p>
-      <ng-container>
-        <mat-icon class="icon">keyboard_arrow_up</mat-icon>
-      </ng-container>
-      <p>{{ minutosParaHoras(totalBalance) }}</p>
+      <div class="Sum">
+        <mat-icon *ngIf="totalBalance > 0" class="icon">keyboard_arrow_up</mat-icon>
+        <mat-icon *ngIf="totalBalance < 0" class="icon">keyboard_arrow_down</mat-icon>
+        <p>{{ minutosParaHoras(totalBalance) }}</p>
+      </div>
     </div>
   </div>
 </mat-drawer>

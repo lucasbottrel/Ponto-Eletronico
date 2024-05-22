@@ -40,6 +40,15 @@ body {
       align-items: center;
       font-size: 3vh;
       color: #495057;
+      gap: 5%;
+      background: #f3f3f3;
+
+      .Sum {
+        display: flex;
+        text-align: center;
+        align-items: center;
+      }
+
     }
   }
 
@@ -296,4 +305,12 @@ input:focus {
   box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
 }
 
+.positive {
+  background: #5c9d6a !important;
+  color: #ffffff !important;
+}
 
+.negative {
+  color: #ffffff !important;
+  background: #9d5c5c !important;
+}
